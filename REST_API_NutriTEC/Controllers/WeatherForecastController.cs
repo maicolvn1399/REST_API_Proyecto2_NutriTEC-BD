@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
+using REST_API_NutriTEC.Models;
 
 namespace REST_API_NutriTEC.Controllers
 {
@@ -28,6 +29,9 @@ namespace REST_API_NutriTEC.Controllers
                 Summary = Summaries[Random.Shared.Next(Summaries.Length)]
             })
             .ToArray();
+
+
+            
         }
     }
 }
