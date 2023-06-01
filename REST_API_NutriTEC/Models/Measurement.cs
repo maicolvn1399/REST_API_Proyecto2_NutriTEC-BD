@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace REST_API_NutriTEC.Models;
 
@@ -21,5 +22,6 @@ public partial class Measurement
 
     public string? FatPercentage { get; set; }
 
+    [NotMapped]
     public virtual Client? Client { get; set; }
 }

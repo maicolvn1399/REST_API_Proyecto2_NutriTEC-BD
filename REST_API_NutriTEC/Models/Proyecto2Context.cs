@@ -43,6 +43,10 @@ public partial class Proyecto2Context : DbContext
 
     public virtual DbSet<LoginClient> LoginClients { get; set; }
 
+    public virtual DbSet<LoginNutritionist> LoginNutritionists { get; set; }
+
+    public virtual DbSet<AddNutritionist> AddNutritionists { get; set; }
+
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
         => optionsBuilder.UseNpgsql("Host=serverproyecto2.postgres.database.azure.com;Database=proyecto2;Username=postgresqladmin;Password=Naheem.1234");
@@ -361,10 +365,6 @@ public partial class Proyecto2Context : DbContext
                 .HasForeignKey(d => d.Vitamin)
                 .HasConstraintName("vitaminxdish_fk1");
         });
-
-
-
-        
 
         OnModelCreatingPartial(modelBuilder);
     }
