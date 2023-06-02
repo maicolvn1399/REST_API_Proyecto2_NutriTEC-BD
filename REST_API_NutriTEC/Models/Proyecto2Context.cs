@@ -47,6 +47,18 @@ public partial class Proyecto2Context : DbContext
 
     public virtual DbSet<AddNutritionist> AddNutritionists { get; set; }
 
+    public virtual DbSet<LoginAdmin> LoginAdmins { get; set; }
+
+    public virtual DbSet<Calculate_billing> Calculate_billings { get; set; }
+
+    public virtual DbSet<GetUnapprovedProduct> GetUnapprovedProducts { get; set; }
+
+    public virtual DbSet<Approve_product> Approve_products { get; set; }
+
+    public virtual DbSet<Delete_product> Delete_products { get; set; }
+
+    public virtual DbSet<Delete_plan> Delete_plans { get; set; }
+
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
         => optionsBuilder.UseNpgsql("Host=serverproyecto2.postgres.database.azure.com;Database=proyecto2;Username=postgresqladmin;Password=Naheem.1234");
