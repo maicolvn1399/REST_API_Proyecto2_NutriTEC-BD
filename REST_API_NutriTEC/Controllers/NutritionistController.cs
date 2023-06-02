@@ -23,6 +23,7 @@ namespace REST_API_NutriTEC.Controllers
             JSON_Object json = new JSON_Object("error", null);
             var result = _context.LoginNutritionists.FromSqlInterpolated($"select * from loginnutritionist({nutritionist_credentials.email},{Encryption.encrypt_password(nutritionist_credentials.password)})");
             var db_result = result.ToList();
+            //Retorno de una tabla se valida de esta forma
             if (db_result.Count == 0)
             {
                 return BadRequest(json);
@@ -44,9 +45,7 @@ namespace REST_API_NutriTEC.Controllers
             Console.WriteLine("1) " + dbDate);
             DateOnly dateOnly1 = DateOnly.ParseExact(dbDate, "yyyy-MM-dd");
             Console.WriteLine("2) " + dateOnly1);
-            DateTime testDateTime = dateOnly1.ToDateTime(TimeOnly.Parse("12:00 AM"));
-            Console.WriteLine("3) " + testDateTime);
-            Console.WriteLine("4) " + dateTime.ToString());
+            
 
 
             Console.WriteLine("executing.....");
@@ -54,6 +53,7 @@ namespace REST_API_NutriTEC.Controllers
             Console.WriteLine($"select * from createnutritionist('{new_nutritionist.NutritionistId}','{new_nutritionist.NutritionistName}','{new_nutritionist.Lastname1}','{new_nutritionist.Lastname2}','{new_nutritionist.Address}','{new_nutritionist.Photo}','{new_nutritionist.CreditCard}',{new_nutritionist.Weight},{new_nutritionist.Height},'{new_nutritionist.Email}','{new_nutritionist.Pass}',{dateOnly1},'{new_nutritionist.BillingId}','{new_nutritionist.RoleId}')");
             var result = _context.AddNutritionists.FromSqlInterpolated($"select * from createnutritionist({new_nutritionist.NutritionistId},{new_nutritionist.NutritionistName},{new_nutritionist.Lastname1},{new_nutritionist.Lastname2},{new_nutritionist.Address},{new_nutritionist.Photo},{new_nutritionist.CreditCard},{new_nutritionist.Weight},{new_nutritionist.Height},{new_nutritionist.Email},{new_nutritionist.Pass},{dateOnly1},{new_nutritionist.BillingId},{new_nutritionist.RoleId})");
             var db_result = result.ToList();
+            //Checa si se ejecuto exitosamente el query de la función
             if (db_result[0].createnutritionist == 1)
             {
                 json.status = "ok";
@@ -64,7 +64,6 @@ namespace REST_API_NutriTEC.Controllers
                 return BadRequest(json);
             }
             
-           
 
         }
     }
