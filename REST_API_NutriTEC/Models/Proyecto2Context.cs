@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
 
@@ -47,11 +47,46 @@ public partial class Proyecto2Context : DbContext
 
     public virtual DbSet<AddNutritionist> AddNutritionists { get; set; }
 
-    public virtual DbSet<AddNewClient> AddNewClients { get; set; }
+    public virtual DbSet<LoginAdmin> LoginAdmins { get; set; }
 
-    public virtual DbSet<AddMeasurement> AddMeasurements { get; set; }
+    public virtual DbSet<Calculate_billing> Calculate_billings { get; set; }
 
-    public virtual DbSet<AddDailyIntake> AddDailyIntakes { get; set; }
+    public virtual DbSet<GetUnapprovedProduct> GetUnapprovedProducts { get; set; }
+
+    public virtual DbSet<Approve_product> Approve_products { get; set; }
+
+    public virtual DbSet<Delete_product> Delete_products { get; set; }
+
+    public virtual DbSet<Delete_plan> Delete_plans { get; set; }
+
+    public virtual DbSet<searchclient> searchclients { get; set; }
+
+    public virtual DbSet<Associateclient> Associateclients { get; set; }
+
+    public virtual DbSet<Create_product> Create_products { get; set; }
+
+    public virtual DbSet<Add_Vitamin_Product> Add_Vitamin_Products { get; set; }
+
+    public virtual DbSet<Get_daily_consumption> Get_daily_consumptions { get; set; }
+
+    public virtual DbSet<Get_nutritionist_clients> Get_nutritionist_clientss { get; set; }
+
+    public virtual DbSet<Get_nutritionist_plans> Get_nutritionist_planss { get; set; }
+
+    public virtual DbSet<Assign_plan> Assign_plans { get; set; }
+
+    public virtual DbSet<Create_plan> Create_plans { get; set; }
+
+    public virtual DbSet<Add_dish_to_plan> Add_dish_to_plans { get; set; }
+
+    public virtual DbSet<Search_product> Search_products { get; set; }
+
+    public virtual DbSet<Createrecipe> Createrecipes { get; set; }
+
+    public virtual DbSet<Add_product_to_recipe> Add_product_to_recipes { get; set; }
+
+    public virtual DbSet<Update_recipe_values> Update_recipe_valuess { get; set; }
+
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
