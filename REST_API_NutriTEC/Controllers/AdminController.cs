@@ -93,7 +93,7 @@ namespace REST_API_NutriTEC.Controllers
 
 
         }
-        [HttpPost("delete_product")]
+        [HttpDelete("delete_product")]
         public async Task<ActionResult<JSON_Object>> DeleteProduct(Product_name _Name)
         {
 
@@ -114,7 +114,7 @@ namespace REST_API_NutriTEC.Controllers
 
 
         }
-        [HttpPost("delete_plan")]
+        [HttpDelete("delete_plan")]
         public async Task<ActionResult<JSON_Object>> DeletePlan(Plan_name _Name)
         {
 
