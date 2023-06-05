@@ -189,7 +189,7 @@ namespace REST_API_NutriTEC.Controllers
 
             foreach (var item in newDailyIntake.consumption)
             {
-                var result = _context.AddDailyIntakes.FromSqlInterpolated($"select * from add_daily_intake({newDailyIntake.client_id},{item.dish_name},{dateOnly1},{item.food_time},{item.serving})");
+                var result = _context.AddDailyIntakes.FromSqlInterpolated($"select * from add_daily_intake({newDailyIntake.client_id},{item.product},{dateOnly1},{item.food_time},{item.size})");
                 var db_result = result.ToList();
                 if (db_result[0].add_daily_intake == 1)
                 {
@@ -209,6 +209,41 @@ namespace REST_API_NutriTEC.Controllers
 
 
         }
+
+        [HttpPost("generate _report")]
+        public async Task<ActionResult<JSON_Object>> GenerateReport(ReportGetter report_getter)
+        {
+            DateTime dateTime = Convert.ToDateTime(report_getter.start_date);
+            DateOnly dateOnly = DateOnly.FromDateTime(dateTime);
+            string dbDate = dateOnly.ToString("yyyy-MM-dd");
+            Console.WriteLine("1) " + dbDate);
+            DateOnly dateOnly1 = DateOnly.ParseExact(dbDate, "yyyy-MM-dd");
+
+            DateTime dateTime2 = Convert.ToDateTime(report_getter.end_date);
+            DateOnly dateOnly2 = DateOnly.FromDateTime(dateTime2);
+            string dbDate2 = dateOnly2.ToString("yyyy-MM-dd");
+            Console.WriteLine("1) " + dbDate2);
+            DateOnly dateOnly3 = DateOnly.ParseExact(dbDate2, "yyyy-MM-dd");
+
+            JSON_Object json = new JSON_Object("error", null);
+
+            var result = _context.GenerateReports.FromSqlInterpolated($"select * from generate_report({report_getter.client_id},{dateOnly1},{dateOnly3})");
+            var db_result = result.ToList();
+
+            if (db_result.Count == 0)
+            {
+                return BadRequest(json);
+            }
+            else
+            {
+                json.status = "ok";
+                json.result = db_result;
+                return Ok(json);
+            }
+        }
+
+
+
     }
 
 
