@@ -110,16 +110,12 @@ namespace REST_API_NutriTEC.Controllers
             DateTime dateTime = Convert.ToDateTime(_Entry.start_date);
             DateOnly dateOnly = DateOnly.FromDateTime(dateTime);
             string dbDate = dateOnly.ToString("yyyy-MM-dd");
-            Console.WriteLine("1) " + dbDate);
             DateOnly dateOnly1 = DateOnly.ParseExact(dbDate, "yyyy-MM-dd");
-            Console.WriteLine("2) " + dateOnly1);
 
             DateTime dateTime1 = Convert.ToDateTime(_Entry.end_date);
-            DateOnly dateOnly11 = DateOnly.FromDateTime(dateTime);
-            string dbDate1 = dateOnly.ToString("yyyy-MM-dd");
-            Console.WriteLine("1) " + dbDate);
-            DateOnly dateOnly111 = DateOnly.ParseExact(dbDate, "yyyy-MM-dd");
-            Console.WriteLine("2) " + dateOnly1);
+            DateOnly dateOnly11 = DateOnly.FromDateTime(dateTime1);
+            string dbDate1 = dateOnly11.ToString("yyyy-MM-dd");
+            DateOnly dateOnly111 = DateOnly.ParseExact(dbDate1, "yyyy-MM-dd");
 
 
             JSON_Object json = new JSON_Object("error", null);
