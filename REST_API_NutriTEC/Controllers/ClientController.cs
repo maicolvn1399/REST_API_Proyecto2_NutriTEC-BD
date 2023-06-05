@@ -140,7 +140,7 @@ namespace REST_API_NutriTEC.Controllers
             DateOnly dateOnly1 = DateOnly.ParseExact(dbDate, "yyyy-MM-dd");
 
             JSON_Object json = new JSON_Object("error", null);
-            var result = _context.AddNewClients.FromSqlInterpolated($"select * from addclient({new_client.name},{new_client.lastname1},{new_client.lastname2},{dateOnly1},{new_client.weight},{new_client.height},{new_client.email},{Encryption.encrypt_password(new_client.password)},{new_client.country},{new_client.calorie})");
+            var result = _context.AddNewClients.FromSqlInterpolated($"select * from addclient({new_client.name},{new_client.lastname1},{new_client.lastname2},{dateOnly1},{new_client.weight},{new_client.height},{new_client.email},{Encryption.encrypt_password(new_client.password)},{new_client.country},{new_client.calorie_goal})");
             var db_result = result.ToList();
             if (db_result[0].addclient == 1)
             {

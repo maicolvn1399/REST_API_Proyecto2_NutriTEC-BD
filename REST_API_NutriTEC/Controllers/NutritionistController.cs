@@ -41,7 +41,7 @@ namespace REST_API_NutriTEC.Controllers
         [HttpPost("add_nutritionist")]
         public async Task<ActionResult<JSON_Object>> AddNutritionist(NewNutritionist new_nutritionist)
         {
-            DateTime dateTime = Convert.ToDateTime(new_nutritionist.BirthDate);
+            DateTime dateTime = Convert.ToDateTime(new_nutritionist.birth_date);
             DateOnly dateOnly = DateOnly.FromDateTime(dateTime);
             string dbDate = dateOnly.ToString("yyyy-MM-dd");
             Console.WriteLine("1) " + dbDate);
@@ -52,8 +52,9 @@ namespace REST_API_NutriTEC.Controllers
 
             Console.WriteLine("executing.....");
             JSON_Object json = new JSON_Object("error", null);
-            Console.WriteLine($"select * from createnutritionist('{new_nutritionist.NutritionistId}','{new_nutritionist.NutritionistName}','{new_nutritionist.Lastname1}','{new_nutritionist.Lastname2}','{new_nutritionist.Address}','{new_nutritionist.Photo}','{new_nutritionist.CreditCard}',{new_nutritionist.Weight},{new_nutritionist.Height},'{new_nutritionist.Email}','{new_nutritionist.Pass}',{dateOnly1},'{new_nutritionist.BillingId}','{new_nutritionist.RoleId}')");
-            var result = _context.AddNutritionists.FromSqlInterpolated($"select * from createnutritionist({new_nutritionist.NutritionistId},{new_nutritionist.NutritionistName},{new_nutritionist.Lastname1},{new_nutritionist.Lastname2},{new_nutritionist.Address},{new_nutritionist.Photo},{new_nutritionist.CreditCard},{new_nutritionist.Weight},{new_nutritionist.Height},{new_nutritionist.Email},{new_nutritionist.Pass},{dateOnly1},{new_nutritionist.BillingId},{new_nutritionist.RoleId})");
+            string rol = "Nutritionist";
+            //Console.WriteLine($"select * from createnutritionist('{new_nutritionist.id}','{new_nutritionist.name}','{new_nutritionist.Lastname1}','{new_nutritionist.Lastname2}','{new_nutritionist.Address}','{new_nutritionist.Photo}','{new_nutritionist.CreditCard}',{new_nutritionist.Weight},{new_nutritionist.Height},'{new_nutritionist.Email}','{new_nutritionist.Pass}',{dateOnly1},'{new_nutritionist.BillingId}','{new_nutritionist.RoleId}')");
+            var result = _context.AddNutritionists.FromSqlInterpolated($"select * from createnutritionist({new_nutritionist.id},{new_nutritionist.name},{new_nutritionist.lastname_1},{new_nutritionist.lastname_2},{new_nutritionist.address},{new_nutritionist.photo},{new_nutritionist.credit_card},{new_nutritionist.weight},{new_nutritionist.height},{new_nutritionist.email},{Encryption.encrypt_password(new_nutritionist.password)},{dateOnly1},{new_nutritionist.payment_type},{rol})");
             var db_result = result.ToList();
             //Checa si se ejecuto exitosamente el query de la función
             if (db_result[0].createnutritionist == 1)

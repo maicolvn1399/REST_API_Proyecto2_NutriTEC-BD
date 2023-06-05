@@ -3,32 +3,30 @@
     public class NewNutritionist
     {
 
-        public string NutritionistId { get; set; } = string.Empty;
+        public string id { get; set; } = string.Empty;
 
-        public string NutritionistName { get; set; } = string.Empty;
+        public string name { get; set; } = string.Empty;
 
-        public string Lastname1 { get; set; } = string.Empty;
+        public string lastname_1 { get; set; } = string.Empty;
 
-        public string Lastname2 { get; set; } = string.Empty;
+        public string lastname_2 { get; set; } = string.Empty;
 
-        public string Address { get; set; } = string.Empty;
+        public string email { get; set; } = string.Empty;
 
-        public string Photo { get; set; } = string.Empty;
+        public string password { get; set; } = string.Empty;
 
-        public string CreditCard { get; set; } = string.Empty;
+        public string birth_date { get; set; }
 
-        public System.Double Weight { get; set; }
+        public System.Double weight { get; set; }
 
-        public System.Double Height { get; set; }
+        public System.Double height { get; set; }
 
-        public string Email { get; set; } = string.Empty;
+        public string photo { get; set; } = string.Empty;
 
-        public string Pass { get; set; } = string.Empty;
+        public string credit_card { get; set; } = string.Empty;
 
-        public string BirthDate { get; set; }
+        public string payment_type { get; set; } = string.Empty;
 
-        public string BillingId { get; set; } = string.Empty;
-
-        public string RoleId { get; set; } = string.Empty;
+        public string address { get; set; } = string.Empty;
     }
 }

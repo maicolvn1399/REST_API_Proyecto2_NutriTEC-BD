@@ -11,6 +11,6 @@
         public string email { get; set; } = string.Empty;
         public string password { get; set; } = string.Empty;
         public string country { get; set; } = string.Empty;
-        public int calorie { get; set; } = 0;
+        public int calorie_goal { get; set; } = 0;
     }
 }
