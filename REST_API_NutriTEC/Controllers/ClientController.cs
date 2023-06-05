@@ -264,6 +264,42 @@ namespace REST_API_NutriTEC.Controllers
 
         }
 
+        [HttpPost("create_pdf_report")]
+        public async Task<ActionResult<JSON_Object>> CreatePDFReport(ReportGetter report_getter)
+        {
+
+            DateTime dateTime = Convert.ToDateTime(report_getter.start_date);
+            DateOnly dateOnly = DateOnly.FromDateTime(dateTime);
+            string dbDate = dateOnly.ToString("yyyy-MM-dd");
+            Console.WriteLine("1) " + dbDate);
+            DateOnly dateOnly1 = DateOnly.ParseExact(dbDate, "yyyy-MM-dd");
+
+            DateTime dateTime2 = Convert.ToDateTime(report_getter.end_date);
+            DateOnly dateOnly2 = DateOnly.FromDateTime(dateTime2);
+            string dbDate2 = dateOnly2.ToString("yyyy-MM-dd");
+            Console.WriteLine("1) " + dbDate2);
+            DateOnly dateOnly3 = DateOnly.ParseExact(dbDate2, "yyyy-MM-dd");
+
+            JSON_Object json = new JSON_Object("error", null);
+
+            var result = _context.GenerateReports.FromSqlInterpolated($"select * from generate_report({report_getter.client_id},{dateOnly1},{dateOnly3})");
+            var db_result = result.ToList();
+
+            if (db_result.Count == 0)
+            {
+                return BadRequest(json);
+            }
+            else
+            {
+                json.status = "ok";
+                json.result = db_result;
+                return Ok(json);
+            }
+
+
+        }
+
+
 
 
     }

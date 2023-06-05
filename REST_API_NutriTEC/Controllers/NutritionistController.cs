@@ -232,5 +232,35 @@ namespace REST_API_NutriTEC.Controllers
                 var db_result = dishresult.ToList();
                 Console.WriteLine(db_result[0].ToString());
         }
+
+
+        [HttpPost("patient_follow_up")]
+        public async Task<ActionResult<JSON_Object>> PatientFollowUp(PatientFollowUpGetter getter)
+        {
+            DateTime dateTime = Convert.ToDateTime(getter.date);
+            DateOnly dateOnly = DateOnly.FromDateTime(dateTime);
+            string dbDate = dateOnly.ToString("yyyy-MM-dd");
+            Console.WriteLine("1) " + dbDate);
+            DateOnly dateOnly1 = DateOnly.ParseExact(dbDate, "yyyy-MM-dd");
+            Console.WriteLine("2) " + dateOnly1);
+
+            JSON_Object json = new JSON_Object("error", null);
+
+            var result = _context.PatientFollowUpJSONs.FromSqlInterpolated($"select * from get_daily_consumption({getter.client_email},{dateOnly1})");
+            var db_result = result.ToList();
+            if (db_result.Count == 0)
+            {
+                return BadRequest(json);
+            }
+            else
+            {
+                json.status = "ok";
+                json.result = db_result;
+                return Ok(json);
+            }
+
+
+
+        }
     }
 }
