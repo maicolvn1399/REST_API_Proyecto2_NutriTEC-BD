@@ -210,7 +210,7 @@ namespace REST_API_NutriTEC.Controllers
 
         }
 
-        [HttpPost("generate _report")]
+        [HttpPost("generate_report")]
         public async Task<ActionResult<JSON_Object>> GenerateReport(ReportGetter report_getter)
         {
             DateTime dateTime = Convert.ToDateTime(report_getter.start_date);
