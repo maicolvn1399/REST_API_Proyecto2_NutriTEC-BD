@@ -122,7 +122,7 @@ namespace REST_API_NutriTEC.Controllers
         }
 
 
-        [HttpPut("search_dish")]
+        [HttpPut("search_dish_mobile")]
         public async Task<ActionResult<JSON_Object>> Search_Dish(Product_ID _Entry)
         {
             JSON_Object json = new JSON_Object("error", null);
