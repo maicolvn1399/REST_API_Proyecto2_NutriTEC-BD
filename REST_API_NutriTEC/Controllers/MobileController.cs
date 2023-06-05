@@ -142,4 +142,5 @@ namespace REST_API_NutriTEC.Controllers
                 return Ok(json);
             }
         }
+    }
 }
