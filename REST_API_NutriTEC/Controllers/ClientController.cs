@@ -243,6 +243,28 @@ namespace REST_API_NutriTEC.Controllers
         }
 
 
+        [HttpPost("get_client_plan")]
+        public async Task<ActionResult<JSON_Object>> GetClientPlan(ClientIdentifier client_id)
+        {
+            JSON_Object json = new JSON_Object("error", null);
+            var result = _context.ClientPlans.FromSqlInterpolated($"select * from load_plan({client_id.client_id})");
+            var db_result = result.ToList();
+           
+
+            if (db_result.Count == 0)
+            {
+                return BadRequest(json);
+            }
+            else
+            {
+                json.status = "ok";
+                json.result = db_result;
+                return Ok(json);
+            }
+
+        }
+
+
 
     }
 
