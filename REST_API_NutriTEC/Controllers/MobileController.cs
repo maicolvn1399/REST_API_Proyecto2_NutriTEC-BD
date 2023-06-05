@@ -120,5 +120,26 @@ namespace REST_API_NutriTEC.Controllers
                 return BadRequest(json);
             }
         }
-    }
+
+
+        [HttpPut("search_dish")]
+        public async Task<ActionResult<JSON_Object>> Search_Dish(Product_ID _Entry)
+        {
+            JSON_Object json = new JSON_Object("error", null);
+
+            var result = _context.Search_products.FromSqlInterpolated($"select * from search_product({_Entry.product})");
+            var db_result = result.ToList();
+
+            //Checa si se ejecuto exitosamente el query de la función
+            if (db_result.Count == 0)
+            {
+                return BadRequest(json);
+            }
+            else
+            {
+                json.status = "ok";
+                json.result = db_result;
+                return Ok(json);
+            }
+        }
 }
