@@ -16,13 +16,12 @@ namespace REST_API_NutriTEC.Controllers
             _context = context;
         }
 
-        [HttpPut("auth_nutritionist_mobile")]
-        public async Task<ActionResult<JSON_Object>> AuthNutritionist(Credentials nutritionist_credentials)
+        [HttpGet("auth_client_mobile/{email}/{password}")]
+        public async Task<ActionResult<JSON_Object>> AuthClient(string email, string password)
         {
             JSON_Object json = new JSON_Object("error", null);
-            var result = _context.LoginNutritionists.FromSqlInterpolated($"select * from loginnutritionist({nutritionist_credentials.email},{Encryption.encrypt_password(nutritionist_credentials.password)})");
+            var result = _context.LoginClients.FromSqlInterpolated($"select * from loginclient({email},{Encryption.encrypt_password(password)})");
             var db_result = result.ToList();
-            //Retorno de una tabla se valida de esta forma
             if (db_result.Count == 0)
             {
                 return BadRequest(json);
@@ -35,26 +34,19 @@ namespace REST_API_NutriTEC.Controllers
             }
         }
 
-        [HttpPut("add_nutritionist_mobile")]
-        public async Task<ActionResult<JSON_Object>> AddNutritionist(NewNutritionist new_nutritionist)
+        [HttpGet("add_client_mobile/{name}/{lastname1}/{lastname2}/{date}/{weight}/{height}/{email}/{password}/{country}/{calorie_goal}")]
+        public async Task<ActionResult<JSON_Object>> AddClient(string name, string lastname1, string lastname2, string date, System.Double weight, System.Double height, string email, string password, string country, int calorie_goal)
         {
-            DateTime dateTime = Convert.ToDateTime(new_nutritionist.birth_date);
+            DateTime dateTime = Convert.ToDateTime(date);
             DateOnly dateOnly = DateOnly.FromDateTime(dateTime);
             string dbDate = dateOnly.ToString("yyyy-MM-dd");
             Console.WriteLine("1) " + dbDate);
             DateOnly dateOnly1 = DateOnly.ParseExact(dbDate, "yyyy-MM-dd");
-            Console.WriteLine("2) " + dateOnly1);
 
-
-
-            Console.WriteLine("executing.....");
             JSON_Object json = new JSON_Object("error", null);
-            string rol = "Nutritionist";
-            //Console.WriteLine($"select * from createnutritionist('{new_nutritionist.id}','{new_nutritionist.name}','{new_nutritionist.Lastname1}','{new_nutritionist.Lastname2}','{new_nutritionist.Address}','{new_nutritionist.Photo}','{new_nutritionist.CreditCard}',{new_nutritionist.Weight},{new_nutritionist.Height},'{new_nutritionist.Email}','{new_nutritionist.Pass}',{dateOnly1},'{new_nutritionist.BillingId}','{new_nutritionist.RoleId}')");
-            var result = _context.AddNutritionists.FromSqlInterpolated($"select * from createnutritionist({new_nutritionist.id},{new_nutritionist.name},{new_nutritionist.lastname_1},{new_nutritionist.lastname_2},{new_nutritionist.address},{new_nutritionist.photo},{new_nutritionist.credit_card},{new_nutritionist.weight},{new_nutritionist.height},{new_nutritionist.email},{Encryption.encrypt_password(new_nutritionist.password)},{dateOnly1},{new_nutritionist.payment_type},{rol})");
+            var result = _context.AddNewClients.FromSqlInterpolated($"select * from addclient({name},{lastname1},{lastname2},{dateOnly1},{weight},{height},{email},{Encryption.encrypt_password(password)},{country},{calorie_goal})");
             var db_result = result.ToList();
-            //Checa si se ejecuto exitosamente el query de la función
-            if (db_result[0].createnutritionist == 1)
+            if (db_result[0].addclient == 1)
             {
                 json.status = "ok";
                 return Ok(json);
@@ -63,20 +55,19 @@ namespace REST_API_NutriTEC.Controllers
             {
                 return BadRequest(json);
             }
-
         }
 
-        [HttpPut("add_measurement_mobile")]
-        public async Task<ActionResult<JSON_Object>> AddMeasurement(NewMeasurement newMeasurement)
+        [HttpGet("add_measurement_mobile/{email}/{date}/{weight}/{waist}/{neck}/{hip}/{muscle_percentage}/{fat_percentage}")]
+        public async Task<ActionResult<JSON_Object>> AddMeasurement(string email, string date, System.Double weight, System.Double waist, System.Double neck, System.Double hip, string muscle_percentage, string fat_percentage)
         {
-            DateTime dateTime = Convert.ToDateTime(newMeasurement.date);
+            DateTime dateTime = Convert.ToDateTime(date);
             DateOnly dateOnly = DateOnly.FromDateTime(dateTime);
             string dbDate = dateOnly.ToString("yyyy-MM-dd");
             Console.WriteLine("1) " + dbDate);
             DateOnly dateOnly1 = DateOnly.ParseExact(dbDate, "yyyy-MM-dd");
 
             JSON_Object json = new JSON_Object("error", null);
-            var result = _context.AddMeasurements.FromSqlInterpolated($"select * from addmeasurement({newMeasurement.client_id},{dateOnly1},{newMeasurement.weight},{newMeasurement.waist},{newMeasurement.neck},{newMeasurement.hip},{newMeasurement.muscle_percentage},{newMeasurement.fat_percentage})");
+            var result = _context.AddMeasurements.FromSqlInterpolated($"select * from addmeasurement({email},{dateOnly1},{weight},{waist},{neck},{hip},{muscle_percentage},{fat_percentage})");
             var db_result = result.ToList();
             if (db_result[0].addmeasurement == 1)
             {
@@ -122,12 +113,12 @@ namespace REST_API_NutriTEC.Controllers
         }
 
 
-        [HttpPut("search_dish_mobile")]
-        public async Task<ActionResult<JSON_Object>> Search_Dish(Product_ID _Entry)
+        [HttpGet("search_dish_mobile/{product}")]
+        public async Task<ActionResult<JSON_Object>> Search_Dish(string product)
         {
             JSON_Object json = new JSON_Object("error", null);
 
-            var result = _context.Search_products.FromSqlInterpolated($"select * from search_product({_Entry.product})");
+            var result = _context.Search_products.FromSqlInterpolated($"select * from search_product({product})");
             var db_result = result.ToList();
 
             //Checa si se ejecuto exitosamente el query de la función

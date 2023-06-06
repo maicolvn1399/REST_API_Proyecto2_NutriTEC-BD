@@ -4,6 +4,9 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
 using REST_API_NutriTEC.Models;
 using REST_API_NutriTEC.Resources;
+using PdfSharpCore;
+using PdfSharpCore.Pdf;
+using TheArtOfDev.HtmlRenderer.PdfSharp;
 
 namespace REST_API_NutriTEC.Controllers
 {
@@ -285,16 +288,19 @@ namespace REST_API_NutriTEC.Controllers
             var result = _context.GenerateReports.FromSqlInterpolated($"select * from generate_report({report_getter.client_id},{dateOnly1},{dateOnly3})");
             var db_result = result.ToList();
 
-            if (db_result.Count == 0)
+            var document = new PdfDocument();
+            string HTMLContent = "<h1> Your report from NutriTec </h1>";
+            PdfGenerator.AddPdfPages(document, HTMLContent, PageSize.Letter);
+            byte[]? response = null;
+            using(MemoryStream  stream = new MemoryStream())
             {
-                return BadRequest(json);
+                document.Save(stream);
+                response = stream.ToArray();
             }
-            else
-            {
-                json.status = "ok";
-                json.result = db_result;
-                return Ok(json);
-            }
+            string filename = "Invoice1.pdf";
+            return File(response, "application/pdf", filename);
+
+
 
 
         }
