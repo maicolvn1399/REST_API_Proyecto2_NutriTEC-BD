@@ -74,7 +74,7 @@ namespace REST_API_NutriTEC.Controllers
         /// Method to associate client to a nutritionist 
         /// </summary>
         /// <param name="_Client"> client to associate with a nutritionist </param>
-        /// <returns> returns a json </returns>
+        /// <returns> returns a json confirming if the query was succesful </returns>
         [HttpPost("associate_client")]
         public async Task<ActionResult<JSON_Object>> AssociateClient(Associate_Client _Client)
         {
@@ -92,6 +92,12 @@ namespace REST_API_NutriTEC.Controllers
                 return BadRequest(json);
             }
         }
+
+        /// <summary>
+        /// Method to add a product to the database
+        /// </summary>
+        /// <param name="_Product"> model that refers to the product that has to be inserted into the database</param>
+        /// <returns> JSON confirming if the query was succesful </returns>
         [HttpPost("add_product")]
         public async Task<ActionResult<JSON_Object>> Add_Product(AddProduct _Product)
         {
@@ -110,6 +116,11 @@ namespace REST_API_NutriTEC.Controllers
                 return BadRequest(json);
             }
         }
+        /// <summary>
+        /// Method to add vitamins to a certain product
+        /// </summary>
+        /// <param name="vitaminlist"> vitamins list of a product </param>
+        /// <param name="p_name"> name of the product </param>
         [HttpPost("add_vitamin")]
         private async void Add_Vitamins(List<string> vitaminlist, string p_name)
         {
@@ -122,6 +133,12 @@ namespace REST_API_NutriTEC.Controllers
                 Console.WriteLine(db_result[0].ToString());
             }
         }
+
+        /// <summary>
+        /// Method to get the daily consumption of a client
+        /// </summary>
+        /// <param name="_Entry"> model with the specific attributes to get the consumption of a client </param>
+        /// <returns> returns a JSON with the information requested</returns>
 
         [HttpPost("get_daily_consumption")]
         public async Task<ActionResult<JSON_Object>> GetConsumption(Consumption_entry _Entry)
@@ -150,7 +167,11 @@ namespace REST_API_NutriTEC.Controllers
             }
         }
 
-
+        /// <summary>
+        /// Method to add a client to the database 
+        /// </summary>
+        /// <param name="new_client"> model of the attributes of a new client that has to be inserted into the database </param>
+        /// <returns></returns>
         [HttpPost("add_client")]
         public async Task<ActionResult<JSON_Object>> AddClient(NewClient new_client)
         {
@@ -173,7 +194,11 @@ namespace REST_API_NutriTEC.Controllers
                 return BadRequest(json);
             }
         }
-
+        /// <summary>
+        /// method to add measurements for a client 
+        /// </summary>
+        /// <param name="newMeasurement"> model with the attributes of measurements for a certain client </param>
+        /// <returns> returns a json indicating if the query was succesdful </returns>
         [HttpPost("add_measurement")]
         public async Task<ActionResult<JSON_Object>> AddMeasurement(NewMeasurement newMeasurement)
         {
@@ -197,6 +222,11 @@ namespace REST_API_NutriTEC.Controllers
             }
         }
 
+        /// <summary>
+        /// Method to add the daily intake of a client 
+        /// </summary>
+        /// <param name="newDailyIntake"> model with the attributes for a client to enter their daily intake of food</param>
+        /// <returns> returns a JSON indicating if the query was succesful </returns>
         [HttpPost("add_daily_intake")]
         public async Task<ActionResult<JSON_Object>> AddDailyIntake(NewDailyIntake newDailyIntake)
         {
@@ -231,6 +261,11 @@ namespace REST_API_NutriTEC.Controllers
 
         }
 
+        /// <summary>
+        /// Method to generate a report that will be displayed in the web app 
+        /// </summary>
+        /// <param name="report_getter"> model with the attributes to get the report for a certain client </param>
+        /// <returns> returns a JSON with the information requested </returns>
         [HttpPost("generate_report")]
         public async Task<ActionResult<JSON_Object>> GenerateReport(ReportGetter report_getter)
         {
@@ -263,7 +298,11 @@ namespace REST_API_NutriTEC.Controllers
             }
         }
 
-
+        /// <summary>
+        ///  Method to get the plan that a client is associated to 
+        /// </summary>
+        /// <param name="client_id"> model to refer to a client </param>
+        /// <returns> returns a JSON with the requested information </returns>
         [HttpPost("get_client_plan")]
         public async Task<ActionResult<JSON_Object>> GetClientPlan(ClientIdentifier client_id)
         {
@@ -285,6 +324,13 @@ namespace REST_API_NutriTEC.Controllers
 
         }
 
+        /// <summary>
+        /// Method to get a PDF file of a report of the client's measurements 
+        /// </summary>
+        /// <param name="email"> refers to the email of client </param>
+        /// <param name="start_date"> refers to a the starting date of the set of measurements provided by the client</param>
+        /// <param name="end_date"> refers to the end_date of the set of measurements provided by the client </param>
+        /// <returns> returns a PDF file if succesful, if not it returns a JSON indicating error </returns>
         [HttpGet("create_pdf_report/{email}/{start_date}/{end_date}")]
         public async Task<ActionResult<JSON_Object>> CreatePDFReport(string email, string start_date, string end_date)
         {

@@ -11,7 +11,9 @@ namespace REST_API_NutriTEC.Controllers
     [Route("api/")]
     public class NutritionistController : ControllerBase
     {
-
+        /// <summary>
+        /// Context attribute to call the class that manages the database
+        /// </summary>
         private readonly Proyecto2Context _context;
 
         public NutritionistController(Proyecto2Context context)
@@ -19,6 +21,11 @@ namespace REST_API_NutriTEC.Controllers
             _context = context;
         }
 
+        /// <summary>
+        /// Method to authenticate a nutritionist
+        /// </summary>
+        /// <param name="nutritionist_credentials"> refers to the model of credentials that has an email and a password to authenticatee a nutritonist</param>
+        /// <returns> returns a JSON with the information of the nutritionist </returns>
         [HttpPost("auth_nutritionist")]
         public async Task<ActionResult<JSON_Object>> AuthNutritionist(Credentials nutritionist_credentials)
         {
@@ -38,6 +45,11 @@ namespace REST_API_NutriTEC.Controllers
             }
         }
 
+        /// <summary>
+        /// Method to add a nutritionist 
+        /// </summary>
+        /// <param name="new_nutritionist"> refers to a model that has all the attributes to insert a new nutritionist into the database</param>
+        /// <returns> returns a JSON indicating if the query was succesful</returns>
         [HttpPost("add_nutritionist")]
         public async Task<ActionResult<JSON_Object>> AddNutritionist(NewNutritionist new_nutritionist)
         {
@@ -69,6 +81,11 @@ namespace REST_API_NutriTEC.Controllers
             
 
         }
+        /// <summary>
+        /// Method to get the nutritionist's clients
+        /// </summary>
+        /// <param name="_Entry"> refers to an indentifier of the nutritionist </param>
+        /// <returns> returns a JSON with the requested information if succesful </returns>
         [HttpPost("get_nutritionist_clients")]
         public async Task<ActionResult<JSON_Object>> GetNutriClients(NutriID _Entry)
         {
@@ -87,6 +104,11 @@ namespace REST_API_NutriTEC.Controllers
                 return Ok(json);
             }
         }
+        /// <summary>
+        /// Method to get all the plans that a nutritionist has created
+        /// </summary>
+        /// <param name="_Entry"> refers to an identifier for the nutritionist </param>
+        /// <returns> returns a JSON with the requested information </returns>
         [HttpPost("get_nutritionist_plans")]
         public async Task<ActionResult<JSON_Object>> GetNutriPlans(NutriID _Entry)
         {
@@ -105,6 +127,11 @@ namespace REST_API_NutriTEC.Controllers
                 return Ok(json);
             }
         }
+        /// <summary>
+        /// Method to assign a plan 
+        /// </summary>
+        /// <param name="_Entry"> refers to a model with the attributes to associate a client to a certain plan for a certain period of time </param>
+        /// <returns></returns>
         [HttpPost("assign_plan")]
         public async Task<ActionResult<JSON_Object>> AssignPlan(PlanAssigner _Entry)
         {
