@@ -80,10 +80,10 @@ namespace REST_API_NutriTEC.Controllers
             }
         }
 
-        [HttpPut("add_daily_intake_mobile")]
-        public async Task<ActionResult<JSON_Object>> AddDailyIntake(NewDailyIntake newDailyIntake)
+        [HttpGet("add_daily_intake_mobile/{email}/{product}/{date}/{food_time}/{size}")]
+        public async Task<ActionResult<JSON_Object>> AddDailyIntake(string email, string product, string date, string food_time, int size)
         {
-            DateTime dateTime = Convert.ToDateTime(newDailyIntake.date);
+            DateTime dateTime = Convert.ToDateTime(date);
             DateOnly dateOnly = DateOnly.FromDateTime(dateTime);
             string dbDate = dateOnly.ToString("yyyy-MM-dd");
             Console.WriteLine("1) " + dbDate);
@@ -91,17 +91,16 @@ namespace REST_API_NutriTEC.Controllers
 
             JSON_Object json = new JSON_Object("error", null);
 
-            foreach (var item in newDailyIntake.consumption)
+            
+            var result = _context.AddDailyIntakes.FromSqlInterpolated($"select * from add_daily_intake({email},{product},{dateOnly1},{food_time},{size})");
+            var db_result = result.ToList();
+            if (db_result[0].add_daily_intake == 1)
             {
-                var result = _context.AddDailyIntakes.FromSqlInterpolated($"select * from add_daily_intake({newDailyIntake.client_id},{item.product},{dateOnly1},{item.food_time},{item.size})");
-                var db_result = result.ToList();
-                if (db_result[0].add_daily_intake == 1)
-                {
-                    json.status = "ok";
-
-                }
+                json.status = "ok";
 
             }
+
+            
             if (json.status == "ok")
             {
                 return Ok(json);
@@ -133,5 +132,26 @@ namespace REST_API_NutriTEC.Controllers
                 return Ok(json);
             }
         }
+
+        [HttpGet("add_product_mobile/{name}/{size}/{calcium}/{sodium}/{carbs}/{fat}/{calories}/{iron}/{protein}")]
+        public async Task<ActionResult<JSON_Object>> Add_Product(string name, int size, System.Double calcium, System.Double sodium, System.Double carbs, System.Double fat, int calories, System.Double iron, System.Double protein)
+        {
+            JSON_Object json = new JSON_Object("error", null);
+            var result = _context.Create_products.FromSqlInterpolated($"select * from createproduct({name},{size},{calcium},{sodium},{carbs},{fat},{calories},{iron},{protein})");
+            var db_result = result.ToList();
+            //Retorno de una tabla se valida de esta forma
+            if (db_result[0].createproduct == 1)
+            {
+                json.status = "ok";
+                return Ok(json);
+            }
+            else
+            {
+                return BadRequest(json);
+            }
+        }
+
+        
+
     }
 }

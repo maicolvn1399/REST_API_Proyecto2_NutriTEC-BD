@@ -8,6 +8,7 @@ namespace REST_API_NutriTEC.Models
         public DateTime date { get; set; }
         public System.Double weight { get; set; }
         public System.Double waist { get; set;}
+        public System.Double neck { get; set; }
         public System.Double hip { get; set; }
         public string muscle_percentage { get; set; } = string.Empty;
         public string fat_percentage { get; set; } = string.Empty;

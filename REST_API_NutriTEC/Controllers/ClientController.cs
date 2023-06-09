@@ -7,6 +7,7 @@ using REST_API_NutriTEC.Resources;
 using PdfSharpCore;
 using PdfSharpCore.Pdf;
 using TheArtOfDev.HtmlRenderer.PdfSharp;
+using System.Reflection.PortableExecutable;
 
 namespace REST_API_NutriTEC.Controllers
 {
@@ -14,7 +15,9 @@ namespace REST_API_NutriTEC.Controllers
     [Route("api/")]
     public class ClientController : ControllerBase
     {
-
+        /// <summary>
+        /// Context attribute to call the class that manages the database
+        /// </summary>
         private readonly Proyecto2Context _context;
 
         public ClientController(Proyecto2Context context)
@@ -22,6 +25,11 @@ namespace REST_API_NutriTEC.Controllers
             _context = context;
         }
 
+        /// <summary>
+        /// Method to authenticate the client 
+        /// </summary>
+        /// <param name="client_credentials"> JSON with email and password to authenticate the client </param>
+        /// <returns> JSON with the information for the client </returns>
         [HttpPost("auth_client")]
         public async Task<ActionResult<JSON_Object>> AuthClient(Credentials client_credentials)
         {
@@ -39,6 +47,11 @@ namespace REST_API_NutriTEC.Controllers
                 return Ok(json);
             }
         }
+        /// <summary>
+        /// Method to search patient 
+        /// </summary>
+        /// <param name="_Name"> name of the person that someone wants to find </param>
+        /// <returns></returns>
         [HttpPost("search_patient")]
         public async Task<ActionResult<JSON_Object>> PatientSearch(Client_name _Name)
         {
@@ -57,6 +70,11 @@ namespace REST_API_NutriTEC.Controllers
                 return Ok(json);
             }
         }
+        /// <summary>
+        /// Method to associate client to a nutritionist 
+        /// </summary>
+        /// <param name="_Client"> client to associate with a nutritionist </param>
+        /// <returns> returns a json </returns>
         [HttpPost("associate_client")]
         public async Task<ActionResult<JSON_Object>> AssociateClient(Associate_Client _Client)
         {
@@ -267,46 +285,91 @@ namespace REST_API_NutriTEC.Controllers
 
         }
 
-        [HttpPost("create_pdf_report")]
-        public async Task<ActionResult<JSON_Object>> CreatePDFReport(ReportGetter report_getter)
+        [HttpGet("create_pdf_report/{email}/{start_date}/{end_date}")]
+        public async Task<ActionResult<JSON_Object>> CreatePDFReport(string email, string start_date, string end_date)
         {
-
-            DateTime dateTime = Convert.ToDateTime(report_getter.start_date);
-            DateOnly dateOnly = DateOnly.FromDateTime(dateTime);
-            string dbDate = dateOnly.ToString("yyyy-MM-dd");
-            Console.WriteLine("1) " + dbDate);
-            DateOnly dateOnly1 = DateOnly.ParseExact(dbDate, "yyyy-MM-dd");
-
-            DateTime dateTime2 = Convert.ToDateTime(report_getter.end_date);
-            DateOnly dateOnly2 = DateOnly.FromDateTime(dateTime2);
-            string dbDate2 = dateOnly2.ToString("yyyy-MM-dd");
-            Console.WriteLine("1) " + dbDate2);
-            DateOnly dateOnly3 = DateOnly.ParseExact(dbDate2, "yyyy-MM-dd");
-
             JSON_Object json = new JSON_Object("error", null);
-
-            var result = _context.GenerateReports.FromSqlInterpolated($"select * from generate_report({report_getter.client_id},{dateOnly1},{dateOnly3})");
-            var db_result = result.ToList();
-
-            var document = new PdfDocument();
-            string HTMLContent = "<h1> Your report from NutriTec </h1>";
-            PdfGenerator.AddPdfPages(document, HTMLContent, PageSize.Letter);
-            byte[]? response = null;
-            using(MemoryStream  stream = new MemoryStream())
+            try
             {
-                document.Save(stream);
-                response = stream.ToArray();
+                DateTime dateTime = Convert.ToDateTime(start_date);
+                DateOnly dateOnly = DateOnly.FromDateTime(dateTime);
+                string dbDate = dateOnly.ToString("yyyy-MM-dd");
+                Console.WriteLine("1) " + dbDate);
+                DateOnly dateOnly1 = DateOnly.ParseExact(dbDate, "yyyy-MM-dd");
+
+                DateTime dateTime2 = Convert.ToDateTime(end_date);
+                DateOnly dateOnly2 = DateOnly.FromDateTime(dateTime2);
+                string dbDate2 = dateOnly2.ToString("yyyy-MM-dd");
+                Console.WriteLine("1) " + dbDate2);
+                DateOnly dateOnly3 = DateOnly.ParseExact(dbDate2, "yyyy-MM-dd");
+
+                
+
+                var result = _context.GenerateReports.FromSqlInterpolated($"select * from generate_report({email},{dateOnly1},{dateOnly3})");
+                var db_result = result.ToList();
+
+                var document = new PdfDocument();
+
+
+                string HTMLContent = "<div style='width:100%; text-align:center'>";
+                HTMLContent += "<h1> Your Report From NutriTec </h1>";
+
+
+
+                HTMLContent += $"<h3> Client email : {email} </h3>";
+                HTMLContent += "<div>";
+
+                HTMLContent += "<table style ='width:100%; border: 1px solid #000'>";
+                HTMLContent += "<thead style='font-weight:bold'>";
+                HTMLContent += "<tr>";
+                HTMLContent += "<td style='border:1px solid #000'> Date </td>";
+                HTMLContent += "<td style='border:1px solid #000'> Weight (kg) </td>";
+                HTMLContent += "<td style='border:1px solid #000'> Waist (cm) </td>";
+                HTMLContent += "<td style='border:1px solid #000'> Neck (cm) </td >";
+                HTMLContent += "<td style='border:1px solid #000'> Hip (cm) </td>";
+                HTMLContent += "<td style='border:1px solid #000'> Muscle Percentage </td>";
+                HTMLContent += "<td style='border:1px solid #000'> Fat Percentage </td>";
+                HTMLContent += "</tr>";
+                HTMLContent += "</thead >";
+
+                HTMLContent += "<tbody>";
+
+                foreach (var item in db_result)
+                {
+                    HTMLContent += "<tr>";
+                    HTMLContent += "<td>" + item.date + "</td>";
+                    HTMLContent += "<td>" + item.weight + "</td>";
+                    HTMLContent += "<td>" + item.waist + "</td >";
+                    HTMLContent += "<td>" + item.neck + "</td >";
+                    HTMLContent += "<td>" + item.hip + "</td>";
+                    HTMLContent += "<td> " + item.muscle_percentage + "</td >";
+                    HTMLContent += "<td> " + item.fat_percentage + "</td >";
+                    HTMLContent += "</tr>";
+                }
+                HTMLContent += "</tbody>";
+
+                PdfGenerator.AddPdfPages(document, HTMLContent, PageSize.A3);
+                byte[]? response = null;
+                using (MemoryStream stream = new MemoryStream())
+                {
+                    document.Save(stream);
+                    response = stream.ToArray();
+                }
+                string filename = $"report {email} - {dateOnly1} - {dateOnly3}.pdf";
+                return File(response, "application/pdf", filename);
+            } catch (Exception ex)
+            {
+                return BadRequest(json);
             }
-            string filename = "Invoice1.pdf";
-            return File(response, "application/pdf", filename);
+
+            
 
 
 
 
         }
 
-
-
+       
 
     }
 
